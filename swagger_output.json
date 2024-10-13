@@ -1,0 +1,82 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Audio and Book API",
+    "description": "API for managing audio uploads/downloads and book information"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": ["http"],
+  "paths": {
+    "/api/audio/upload": {
+      "post": {
+        "summary": "Upload an audio file",
+        "description": "Uploads an audio file to the server",
+        "responses": {
+          "200": {
+            "description": "Audio file uploaded successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/api/book/list": {
+      "get": {
+        "summary": "Get list of books",
+        "description": "Retrieves a list of all available books",
+        "responses": {
+          "200": {
+            "description": "List of books"
+          }
+        }
+      }
+    },
+    "/api/book/items": {
+      "get": {
+        "summary": "Get book items",
+        "description": "Retrieves detailed information about specific book items",
+        "responses": {
+          "200": {
+            "description": "List of book items"
+          }
+        }
+      }
+    },
+    "/api/book/select": {
+      "get": {
+        "summary": "Select a book",
+        "description": "Selects a book from the list",
+        "responses": {
+          "200": {
+            "description": "Book selected"
+          }
+        }
+      }
+    },
+    "/api/book/detail": {
+      "get": {
+        "summary": "Get book details",
+        "description": "Retrieves detailed information about a specific book",
+        "responses": {
+          "200": {
+            "description": "Book details"
+          }
+        }
+      }
+    },
+    "/api/audio/download": {
+      "get": {
+        "summary": "Download audio file",
+        "description": "Downloads a specific audio file",
+        "responses": {
+          "200": {
+            "description": "Audio file downloaded successfully"
+          }
+        }
+      }
+    }
+  }
+}

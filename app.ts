@@ -1,16 +1,24 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import swaggerAutogen from 'swagger-autogen';
 import swaggerUi from 'swagger-ui-express';
+
+import audioRouter from './audio/audioRouter';
+import bookRouter from './book/bookRouter';
+import userRouter from './user/userRouter';
+import adminRouter from './admin/adminRouter';
 
 dotenv.config();
 
+//TODO : SSL 붙이기
 const app = express();
-
-swaggerAutogen();
 
 app.use(express.json());
 app.use(express.static('./public'));
+
+app.use('/api', audioRouter);
+app.use('/api', bookRouter);
+app.use('/api', userRouter);
+app.use('/api', adminRouter);
 
 const swaggerFile = require('./swagger_output.json');
 
