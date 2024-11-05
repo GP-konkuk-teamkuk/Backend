@@ -13,6 +13,7 @@ const upload = multer({
       const randomId = uuid4();
       const ext = path.extname(file.originalname);
       const filename = randomId + ext;
+      console.log(filename);
       done(null, filename);
     },
     destination(req, file, done) {
@@ -21,7 +22,7 @@ const upload = multer({
   }),
 });
 
-const uploadMiddleware = upload.single('myFile');
+const uploadMiddleware = upload.single('file');
 
 // Audio upload route
 router.post('/audio', uploadMiddleware, uploadAudio);

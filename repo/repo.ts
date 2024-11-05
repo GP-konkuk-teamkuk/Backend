@@ -8,8 +8,8 @@ export const initializeDatabase = () => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT,
       author TEXT,
-      published_date TEXT,
-      description TEXT
+      description TEXT,
+      published_date TEXT
     );
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -44,9 +44,17 @@ export const dbPromise = {
     } catch (err) {
       throw new Error(err.message);
     }
-  }
+  },
 };
 
-export const saveBookDetails = async (title: string, author: string, publishedDate: string, description: string) => {
-  return dbPromise.run('INSERT INTO books (title, author, published_date, description) VALUES (?, ?, ?, ?)', [title, author, publishedDate, description]);
+export const saveBookDetails = async (
+  title: string,
+  author: string,
+  publishedDate: string,
+  description: string,
+) => {
+  return dbPromise.run(
+    'INSERT INTO books (title, author, published_date, description) VALUES (?, ?, ?, ?)',
+    [title, author, publishedDate, description],
+  );
 };
