@@ -1,13 +1,32 @@
 import express from 'express';
+import multer from 'multer';
+import path from 'path';
+import uuid4 from 'uuid4';
+import { uploadAudio, downloadAudio } from './audioService';
 
 const router = express.Router();
 
-router.post('/audio/upload', (res, req) => {
-  console.log('/audio/upload');
+// multer
+const upload = multer({
+  storage: multer.diskStorage({
+    filename(req, file, done) {
+      const randomId = uuid4();
+      const ext = path.extname(file.originalname);
+      const filename = randomId + ext;
+      done(null, filename);
+    },
+    destination(req, file, done) {
+      done(null, path.join(__dirname, 'files'));
+    },
+  }),
 });
 
-router.get('/audio/download', (res, req) => {
-  console.log('/audio/download');
-});
+const uploadMiddleware = upload.single('myFile');
+
+// Audio upload route
+router.post('/audio', uploadMiddleware, uploadAudio);
+
+// Audio download route
+router.get('/audio', downloadAudio);
 
 export default router;

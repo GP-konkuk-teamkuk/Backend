@@ -1,25 +1,23 @@
 import express from 'express';
+import { getBookList, getBookItems, selectBook, getBookDetail } from './bookService';
 
 const router = express.Router();
 
-router.get('/book/list', (res, req) => {
-  console.log('book_list');
-  req.end();
-});
+/**
+ * 책 리스트
+ */
+router.get('/book/list', getBookList);
 
-router.get('/book/items', (res, req) => {
-  console.log('book_items');
-  req.end();
-});
+/**
+ * 책 선택시
+ */
+router.get('/book/items', getBookItems);
 
-router.get('/book/select', (res, req) => {
-  console.log('');
-  req.end();
-});
+/**
+ * 책을 선택한 다음 유저 정보를 통해 보여줄 때 필요함.
+ */
+router.get('/book/select', selectBook);
 
-router.get('/book/detail', (res, req) => {
-  console.log('/api/book/detail');
-  req.end();
-});
+router.get('/book/detail', getBookDetail);
 
 export default router;
