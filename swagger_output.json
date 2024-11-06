@@ -5,7 +5,7 @@
     "title": "Audio and Book API",
     "description": "API for managing audio uploads/downloads and book information"
   },
-  "host": "localhost:3000",
+  "host": "localhost:8080",
   "basePath": "/",
   "schemes": ["http"],
   "paths": {
@@ -13,6 +13,22 @@
       "post": {
         "summary": "Upload an audio file",
         "description": "Uploads an audio file to the server",
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "file",
+            "type": "file",
+            "description": "The audio file to upload",
+            "required": true
+          },
+          {
+            "in": "formData",
+            "name": "userId",
+            "type": "string",
+            "description": "ID of the user",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "Audio file uploaded successfully"
@@ -23,10 +39,53 @@
         }
       }
     },
+    "/api/audio/download": {
+      "get": {
+        "summary": "Download audio file",
+        "description": "Downloads a specific audio file",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "bookId",
+            "type": "string",
+            "description": "ID of the book",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "userId",
+            "type": "string",
+            "description": "ID of the user",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Audio file downloaded successfully"
+          }
+        }
+      }
+    },
     "/api/book/list": {
       "get": {
         "summary": "Get list of books",
         "description": "Retrieves a list of all available books",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "type": "integer",
+            "description": "Page number",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "type": "integer",
+            "description": "Number of items per page",
+            "required": false
+          }
+        ],
         "responses": {
           "200": {
             "description": "List of books"
@@ -38,6 +97,15 @@
       "get": {
         "summary": "Get book items",
         "description": "Retrieves detailed information about specific book items",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "bookId",
+            "type": "string",
+            "description": "ID of the book",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "List of book items"
@@ -49,6 +117,15 @@
       "get": {
         "summary": "Select a book",
         "description": "Selects a book from the list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "userId",
+            "type": "string",
+            "description": "ID of the user",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "Book selected"
@@ -60,6 +137,15 @@
       "get": {
         "summary": "Get book details",
         "description": "Retrieves detailed information about a specific book",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "bookId",
+            "type": "string",
+            "description": "ID of the book",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "Book details"
@@ -67,13 +153,201 @@
         }
       }
     },
-    "/api/audio/download": {
-      "get": {
-        "summary": "Download audio file",
-        "description": "Downloads a specific audio file",
+    "/api/user/login": {
+      "post": {
+        "summary": "User Login",
+        "description": "Logs in a user with email and password",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User login credentials",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Audio file downloaded successfully"
+            "description": "Logged in"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/user/logout": {
+      "post": {
+        "summary": "User Logout",
+        "description": "Logs out the current user",
+        "responses": {
+          "200": {
+            "description": "Logged out"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/user/register": {
+      "post": {
+        "summary": "User Registration",
+        "description": "Registers a new user",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User registration details",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User registered"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/manage/audio": {
+      "get": {
+        "summary": "Fetch Audio List",
+        "description": "Fetches a list of all audio files",
+        "responses": {
+          "200": {
+            "description": "List of audio files"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/manage/books": {
+      "get": {
+        "summary": "Fetch Book Items",
+        "description": "Fetches a list of all book items",
+        "responses": {
+          "200": {
+            "description": "List of book items"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Book",
+        "description": "Creates a new book",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Book details",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "author": {
+                  "type": "string"
+                },
+                "publishedDate": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Book created"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/manage/users": {
+      "get": {
+        "summary": "Fetch User Selection",
+        "description": "Fetches a list of all user selections",
+        "responses": {
+          "200": {
+            "description": "List of user selections"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create User",
+        "description": "Creates a new user",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User details",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User created"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }

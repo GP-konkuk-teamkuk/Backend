@@ -1,33 +1,48 @@
 {
-  "name": "narrify",
-  "version": "0.0.1",
-  "description": "Narrify 백엔드",
-  "main": "app.ts",
-  "scripts": {
-    "dev": "tsx watch app.ts",
-    "start": "tsx app.ts"
-  },
-  "author": "sunghwki",
-  "dependencies": {
-    "@types/express": "^4.17.21",
-    "@types/multer": "^1.4.12",
-    "@types/node": "^22.7.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.21.1",
-    "jest": "^29.7.0",
-    "multer": "^1.4.5-lts.1",
-    "prettier": "^3.3.3",
-    "tsx": "^4.19.1",
-    "typescript": "^5.6.3",
-    "swagger-ui-express": "^5.0.1"
-  },
-  "devDependencies": {
-    "@types/swagger-ui-express": "^4.1.6",
-    "eslint": "^8.57.1",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.30.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "nodemon": "^3.1.7"
-  }
+   "name": "narrify",
+   "version": "0.0.1",
+   "description": "Narrify 백엔드",
+   "main": "app.ts",
+   "scripts": {
+      "dev": "tsx watch app.ts",
+      "start": "tsx app.ts",
+      "typeorm": "typeorm-ts-node-commonjs"
+   },
+   "author": "sunghwki",
+   "dependencies": {
+      "@types/express": "^4.17.21",
+      "@types/multer": "^1.4.12",
+      "@types/node": "^22.7.5",
+      "bcrypt": "^5.1.1",
+      "better-sqlite3": "^9.0.0",
+      "better-sqlite3-session-store": "^0.1.0",
+      "body-parser": "^1.20.3",
+      "cheerio": "^1.0.0",
+      "cookie-parser": "^1.4.7",
+      "cors": "^2.8.5",
+      "dotenv": "^16.4.5",
+      "express": "^4.21.1",
+      "express-session": "^1.18.1",
+      "jest": "^29.7.0",
+      "multer": "^1.4.5-lts.1",
+      "prettier": "^3.3.3",
+      "reflect-metadata": "^0.1.13",
+      "swagger-ui-express": "^5.0.1",
+      "tsx": "^4.19.1",
+      "typeorm": "0.3.20",
+      "typescript": "^5.6.3",
+      "uuid4": "^2.0.3"
+   },
+   "devDependencies": {
+      "@types/node": "^16.11.10",
+      "@types/swagger-ui-express": "^4.1.6",
+      "eslint": "^8.57.1",
+      "eslint-config-airbnb": "^19.0.4",
+      "eslint-config-prettier": "^9.1.0",
+      "eslint-plugin-import": "^2.30.0",
+      "eslint-plugin-prettier": "^5.2.1",
+      "nodemon": "^3.1.7",
+      "ts-node": "10.9.1",
+      "typescript": "4.5.2"
+   }
 }
