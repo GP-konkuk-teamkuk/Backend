@@ -2,19 +2,17 @@ import { Controller, Post, UploadedFile, UseInterceptors, Body } from '@nestjs/c
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AdminService } from './admin.service';
 import { CreateBookDto } from '../book/dto/create-book.dto';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
-@Controller('admin')
+@ApiTags('admin')
+@Controller('manage')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
-  @Post('upload-image')
+  @Post('books')
+  @ApiOperation({ summary: 'Upload a book' })
   @UseInterceptors(FileInterceptor('file'))
-  async uploadBookImage(@UploadedFile() file: Express.Multer.File): Promise<string> {
-    return this.adminService.uploadBookImage(file);
-  }
-
-  @Post('save-text')
-  async saveBookText(@Body() createBookDto: CreateBookDto): Promise<void> {
-    return this.adminService.saveBookText(createBookDto);
+  async uploadBook(@UploadedFile() file: Express.Multer.File, @Body() createBookDto: CreateBookDto): Promise<void> {
+    await this.adminService.uploadBook(file, createBookDto);
   }
 }

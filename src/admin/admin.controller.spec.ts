@@ -13,11 +13,12 @@ describe('AdminController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AdminController],
-      providers: [AdminService,
+      providers: [
+        AdminService,
         {
           provide: getRepositoryToken(Book),
           useClass: Repository,
-        }
+        },
       ],
     }).compile();
 
@@ -29,18 +30,13 @@ describe('AdminController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should upload book image', async () => {
+  it('should upload book', async () => {
     const file = { originalname: 'test.jpg', buffer: Buffer.from('test') } as Express.Multer.File;
-    jest.spyOn(service, 'uploadBookImage').mockResolvedValue(`/public/book/${file.originalname}`);
-    const result = await controller.uploadBookImage(file);
-    expect(result).toBe(`/public/book/${file.originalname}`);
-    expect(service.uploadBookImage).toHaveBeenCalledWith(file);
-  });
+    const createBookDto: CreateBookDto = { image: 'test', text: 'test text', title: 'test title' };
+    jest.spyOn(service, 'uploadBook').mockResolvedValue();
 
-  it('should save book text', async () => {
-    const createBookDto: CreateBookDto = { image: 'test', text: 'test text' };
-    jest.spyOn(service, 'saveBookText').mockResolvedValue();
-    await controller.saveBookText(createBookDto);
-    expect(service.saveBookText).toHaveBeenCalledWith(createBookDto);
+    await controller.uploadBook(file, createBookDto);
+
+    expect(service.uploadBook).toHaveBeenCalledWith(file, createBookDto);
   });
 });

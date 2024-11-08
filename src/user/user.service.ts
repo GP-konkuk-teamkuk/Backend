@@ -21,7 +21,6 @@ export class UserService {
   }
 
   async logout(userId: number) {
-    // Implement logout logic if needed
     return 'User logged out';
   }
 

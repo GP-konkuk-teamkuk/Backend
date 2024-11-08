@@ -9,8 +9,8 @@ export class AudioController {
   constructor(private readonly audioService: AudioService) {}
 
   @Post()
-  @ApiOperation({summary: 'Create User Audio'})
-  @ApiBody({type: CreateAudioDto})
+  @ApiOperation({ summary: 'Create User Audio' })
+  @ApiBody({ type: CreateAudioDto })
   create(@Body() createAudioDto: CreateAudioDto) {
     return this.audioService.create(createAudioDto);
   }

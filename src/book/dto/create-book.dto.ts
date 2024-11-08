@@ -6,4 +6,7 @@ export class CreateBookDto {
 
 	@ApiProperty()
 	text: string;
+
+	@ApiProperty()
+	title: string;
 }

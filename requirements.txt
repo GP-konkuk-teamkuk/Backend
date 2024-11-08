@@ -1,0 +1,20 @@
+torch
+nltk
+umap-learn
+visdom
+librosa>=0.8.0
+matplotlib>=3.3.0
+numpy==1.22.0
+scipy>=1.0.0
+tqdm
+sounddevice
+SoundFile
+Unidecode
+inflect
+PyQt5
+multiprocess
+numba
+webrtcvad; platform_system != "Windows"
+jamo
+praat-parselmouth
+pydub
