@@ -15,13 +15,12 @@ async function bootstrap() {
     cookie: { maxAge: 3600000 } // 1 hour
   }));
 
-  //app.use((req, res, next) => {
-  //  if (req.session && req.session.userId) {
-  //    req.query.userId = req.session.userId;
-  //    req.body.userId = req.session.userId;
-  //  }
-  //  next();
-  //});
+  app.use((req, res, next) => {
+    if (req.method === 'POST' && req.session && req.session.userId) {
+      req.body.userId = req.session.userId;
+    }
+    next();
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Audio API')
