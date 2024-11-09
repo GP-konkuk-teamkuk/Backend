@@ -30,6 +30,6 @@ export class UserService {
     const hashedPassword = await bcrypt.hash(createUserDto.pw, 10);
     const newUser = this.userRepository.create({ user: createUserDto.nickname, email: createUserDto.id, password: hashedPassword });
     await this.userRepository.save(newUser);
-    return 'User registered';
+    return {message: 'User registered'};
   }
 }

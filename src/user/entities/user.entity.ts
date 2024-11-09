@@ -15,9 +15,6 @@ export class User {
   @Column({ type: 'varchar', length: 50, nullable: false })
   email: string;
 
-  @Column({ type: 'int', nullable: false })
-  admin: number;
-
   @Column({ type: 'varchar', length: 100, nullable: true })
   embedding: string;
 

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Session } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Session, HttpCode, HttpStatus } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
@@ -30,6 +30,7 @@ export class UserController {
   }
 
   @Post('/register')
+  @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Register user' })
   async register(@Body() createUserDto: CreateUserDto) {
     return await this.userService.register(createUserDto);
