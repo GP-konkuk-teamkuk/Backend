@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as session from 'express-session';
 import { ConfigService } from '@nestjs/config';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -21,6 +22,14 @@ async function bootstrap() {
     }
     next();
   });
+
+  // test cors
+  const corsOptions: CorsOptions = {
+    origin: 'http://localhost:3000',
+    methods: 'GET,HEAD,PUT,POST,DELETE',
+    credentials: true,
+  };
+  app.enableCors(corsOptions);
 
   const config = new DocumentBuilder()
     .setTitle('Audio API')
