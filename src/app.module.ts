@@ -23,6 +23,7 @@ import { join } from 'path';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
+        entities: [__dirname + '/**/*.entity{.ts,.js}'], // Ensure this line is included
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -35,3 +36,4 @@ import { join } from 'path';
   providers: [],
 })
 export class AppModule {}
+

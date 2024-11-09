@@ -1,19 +1,19 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Session } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @ApiTags('user')
-@Controller('/api/user')
+@Controller('/api')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('/login')
   @ApiOperation({ summary: 'Login user' })
-  async loginUser(@Body('email') email: string, @Body('password') password: string, @Session() session: any) {
-    const result = await this.userService.login(email, password);
-    session.userId = result.userId; // Assuming result contains userId
+  async loginUser(@Body() loginUserDto: LoginUserDto, @Session() session: any) {
+    const result = await this.userService.login(loginUserDto);
+    session.userId = result.userId;
     return result;
   }
   

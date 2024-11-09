@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateBookDto } from '../book/dto/create-book.dto';
 import { join } from 'path';
 import { promises as fs } from 'fs';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,17 +12,17 @@ export class AdminService {
     private readonly bookRepository: Repository<Book>,
   ) {}
 
-  async uploadBook(file: Express.Multer.File, createBookDto: CreateBookDto): Promise<void> {
-    const uploadPath = join(__dirname, '..', '..', 'public', 'book', file.originalname);
-    await fs.writeFile(uploadPath, file.buffer);
+  async uploadBook(image: Express.Multer.File, text: Express.Multer.File, title: string): Promise<void> {
+    const imagePath = join(__dirname, '..', '..', 'public', 'book', image.originalname);
+    await fs.writeFile(imagePath, image.buffer);
 
-    const textPath = join(__dirname, '..', '..', 'public', 'book', `${createBookDto.image}.txt`);
-    await fs.writeFile(textPath, createBookDto.text);
+    const textPath = join(__dirname, '..', '..', 'public', 'book', text.originalname);
+    await fs.writeFile(textPath, text.buffer);
 
     const book = this.bookRepository.create({
-      image: `/public/book/${file.originalname}`,
+      image: imagePath,
       detail: textPath,
-      title: createBookDto.title,
+      title: title,
     });
 
     await this.bookRepository.save(book);

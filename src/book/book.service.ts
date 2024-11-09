@@ -16,8 +16,8 @@ export class BookService {
       take: parseInt(limit),
     });
     return books.map(book => {
-      book.image = `/public/book/${book.image}`;
-      book.detail = `/public/book/${book.detail}`;
+      book.image;
+      book.detail;
       return book;
     });
   }
@@ -25,8 +25,8 @@ export class BookService {
   async findOne(id: number) {
     const book = await this.bookRepository.findOne({ where: { id } });
     if (book) {
-      book.image = `/public/book/${book.image}`;
-      book.detail = `/public/book/${book.detail}`;
+      book.image;
+      book.detail;
     }
     return book;
   }

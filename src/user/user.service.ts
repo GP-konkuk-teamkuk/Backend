@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -12,7 +13,8 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async login(email: string, password: string) {
+  async login(loginUserDto: LoginUserDto) {
+    const { email, password } = loginUserDto;
     const user = await this.userRepository.findOne({ where: { email } });
     if (user && await bcrypt.compare(password, user.password)) {
       return { userId: user.id };

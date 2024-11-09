@@ -15,14 +15,13 @@ async function bootstrap() {
     cookie: { maxAge: 3600000 } // 1 hour
   }));
 
-  // Middleware to inject userId from session into request's query and body
-  app.use((req, res, next) => {
-    if (req.session && req.session.userId) {
-      req.query.userId = req.session.userId;
-      req.body.userId = req.session.userId;
-    }
-    next();
-  });
+  //app.use((req, res, next) => {
+  //  if (req.session && req.session.userId) {
+  //    req.query.userId = req.session.userId;
+  //    req.body.userId = req.session.userId;
+  //  }
+  //  next();
+  //});
 
   const config = new DocumentBuilder()
     .setTitle('Audio API')
@@ -32,6 +31,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, document);
 
-  await app.listen(8080);
+  await app.listen(configService.get<number>('PORT'));
 }
 bootstrap();

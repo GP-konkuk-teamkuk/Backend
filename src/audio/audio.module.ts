@@ -4,10 +4,11 @@ import { AudioService } from './audio.service';
 import { AudioController } from './audio.controller';
 import { Audio } from './entities/audio.entity';
 import { User } from '../user/entities/user.entity';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { Book } from '../book/entities/book.entity';
+import { SwaggerModule } from '@nestjs/swagger';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Audio, User]), SwaggerModule],
+  imports: [TypeOrmModule.forFeature([Audio, User, Book]), SwaggerModule],
   providers: [AudioService],
   controllers: [AudioController],
 })

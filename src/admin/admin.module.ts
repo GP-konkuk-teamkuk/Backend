@@ -4,7 +4,7 @@ import { AdminController } from './admin.controller';
 import { BookModule } from '../book/book.module';
 
 @Module({
-  imports: [BookModule], // Import BookModule to make Book entity available
+  imports: [BookModule],
   controllers: [AdminController],
   providers: [AdminService],
 })

@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
-import { Audio } from '../../audio/entities/audio.entity'; // Updated import path
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Audio } from '../../audio/entities/audio.entity';
 
 @Entity()
 export class User {
