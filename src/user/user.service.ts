@@ -14,7 +14,7 @@ export class UserService {
   ) {}
 
   async login(loginUserDto: LoginUserDto) {
-    const { email, password } = loginUserDto;
+    const { id: email, pw: password } = loginUserDto;
     const user = await this.userRepository.findOne({ where: { email } });
     if (user && await bcrypt.compare(password, user.password)) {
       return { userId: user.id };
@@ -27,8 +27,8 @@ export class UserService {
   }
 
   async register(createUserDto: CreateUserDto) {
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-    const newUser = this.userRepository.create({ ...createUserDto, password: hashedPassword });
+    const hashedPassword = await bcrypt.hash(createUserDto.pw, 10);
+    const newUser = this.userRepository.create({ user: createUserDto.nickname, email: createUserDto.id, password: hashedPassword });
     await this.userRepository.save(newUser);
     return 'User registered';
   }
