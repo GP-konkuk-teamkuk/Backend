@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Book } from './entities/book.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class BookService {
@@ -10,24 +12,30 @@ export class BookService {
     private bookRepository: Repository<Book>,
   ) {}
 
-  async findPage(page: string, limit: string) {
+  async findPage(page: number, limit: number) {
     const books = await this.bookRepository.find({
-      skip: (parseInt(page) - 1) * parseInt(limit),
-      take: parseInt(limit),
+      skip: (page - 1) * limit,
+      take: limit,
     });
     return books.map(book => {
-      book.image;
-      book.detail;
-      return book;
+      const imagePath = path.join(book.image);
+      const image = fs.readFileSync(imagePath, 'base64');
+      return {
+        id: book.id,
+        title: book.title,
+        image: `data:image/jpeg;base64,${image}`,
+      };
     });
   }
 
   async findOne(id: number) {
     const book = await this.bookRepository.findOne({ where: { id } });
-    if (book) {
-      book.image;
-      book.detail;
-    }
-    return book;
+    const imagePath = path.join(book.image);
+    const image = fs.readFileSync(imagePath, 'base64');
+    return {
+      id: book.id,
+      title: book.title,
+      image: `data:image/jpeg;base64,${image}`,
+    };
   }
 }

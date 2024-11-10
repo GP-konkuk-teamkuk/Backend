@@ -1,21 +1,21 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BookService } from './book.service';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
 @ApiTags('book')
 @Controller('/api/book')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
 
-  @Get(':bookId')
+  @Get('/detail')
   @ApiOperation({ summary: 'Get book by ID' })
-  findOne(@Param('bookId') bookId: number) {
+  findOne(@Query('bookId') bookId: number) {
     return this.bookService.findOne(bookId);
   }
 
-  @Get(':page/:limit')
+  @Get()
   @ApiOperation({ summary: 'Get books with pagination' })
-  findAll(@Param('page') page: string, @Param('limit') limit: string) {
+  findAll(@Query('page') page: number, @Query('limit') limit: number) {
     return this.bookService.findPage(page, limit);
   }
 }

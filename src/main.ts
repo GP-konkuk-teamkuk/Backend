@@ -17,7 +17,7 @@ async function bootstrap() {
   }));
 
   app.use((req, res, next) => {
-    if (req.method === 'POST' && req.session && req.session.userId) {
+    if (req.session && req.session.userId) {
       req.body.userId = req.session.userId;
     }
     next();

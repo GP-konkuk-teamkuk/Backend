@@ -9,7 +9,6 @@ import { StreamableFile } from '@nestjs/common';
 import { execSync } from 'child_process';
 import { User } from '../user/entities/user.entity';
 import { Book } from '../book/entities/book.entity';
-import { Multer } from 'multer';
 
 @Injectable()
 export class AudioService {
@@ -29,21 +28,34 @@ export class AudioService {
     if (!book) {
       throw new NotFoundException('Book not found');
     }
-    console.error(book);
 
-    const textFilePath = path.join(__dirname, "..", "..", `${book.detail}`);
-    console.error(textFilePath);
+    const textFilePath = path.join(`${book.detail}`);
     if (!fs.existsSync(textFilePath)) {
       throw new NotFoundException('Text file not found');
     }
 
     const textContent = fs.readFileSync(textFilePath, 'utf8');
-
     const currentDir = __dirname;
-    const command = `conda run -n myenv python ${path.join(currentDir, '..', '..', 'sv2tts_korean', 'synthesize_voice.py')} --text "${textContent}" --hash_and_time ${1}_${1}`;
+    const hashAndTime = `${bookId}_${userId}`;
+    const outputFileName = `${hashAndTime}.wav`;
+    const outputFilePath = path.join(
+      currentDir,
+      '..',
+      '..',
+      'sv2tts_korean',
+      'synthesized_samples',
+      outputFileName,
+    );
+    const command = `conda run -n myenv python ${path.join(currentDir, '..', '..', 'sv2tts_korean', 'synthesize_voice.py')} --text "${textContent}" --hash_and_time ${hashAndTime}`;
     execSync(command);
 
-    return 'Audiobook Created';
+    const audio = new Audio();
+    audio.book = book;
+    audio.user = await this.userRepository.findOne({ where: { id: userId } });
+    audio.audio = outputFileName;
+    await this.audioRepository.save(audio);
+
+    return { message: 'Audiobook Created', audioId: audio.id };
   }
 
   async findOne(bookId: number, userId: number): Promise<StreamableFile> {
@@ -58,7 +70,7 @@ export class AudioService {
       throw new NotFoundException('AudioBook not found');
     }
 
-    const filePath = path.join(__dirname, '..', '..', 'uploads', audio.audio);
+    const filePath = audio.audio;
     if (!fs.existsSync(filePath)) {
       throw new NotFoundException('Audio file not found');
     }
@@ -68,6 +80,7 @@ export class AudioService {
   }
 
   async uploadAudio(file: Express.Multer.File, userId: number) {
+    console.error(userId);
     if (!file) {
       throw new BadRequestException('No file uploaded');
     }
@@ -80,8 +93,15 @@ export class AudioService {
     const currentDir = __dirname;
     const command = `conda run -n myenv python ${path.join(currentDir, '..', '..', 'sv2tts_korean', 'embedding_extraction.py')} --ref_voice_path "${file.path}" --hash ${userId}`;
     execSync(command);
-    
-    user.embedding = path.join(currentDir, '..', '..', 'sv2tts_korean', 'embeddings', `${userId}.pkl`);
+
+    user.embedding = path.join(
+      currentDir,
+      '..',
+      '..',
+      'sv2tts_korean',
+      'embeddings',
+      `${userId}.pkl`,
+    );
     this.userRepository.save(user);
     return user;
   }
