@@ -171,6 +171,6 @@ export class AudioService {
       `${userId}.pkl`,
     );
     this.userRepository.save(user);
-    return user;
+    return {userId: user.id};
   }
 }
