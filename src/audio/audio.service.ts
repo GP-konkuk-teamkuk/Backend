@@ -28,7 +28,6 @@ export class AudioService {
     if (!book) {
       throw new NotFoundException('Book not found');
     }
-
     const textFilePath = path.join(`${book.detail}`);
     if (!fs.existsSync(textFilePath)) {
       throw new NotFoundException('Text file not found');
@@ -52,19 +51,19 @@ export class AudioService {
     const audio = new Audio();
     audio.book = book;
     audio.user = await this.userRepository.findOne({ where: { id: userId } });
-    audio.audio = outputFileName;
+    audio.audio = outputFilePath;
     await this.audioRepository.save(audio);
 
     return { message: 'Audiobook Created', audioId: audio.id };
   }
 
   async findOne(bookId: number, userId: number): Promise<StreamableFile> {
+    console.error(bookId, userId);
     const audio = await this.audioRepository.findOne({
       where: {
         book: { id: bookId },
         user: { id: userId },
       },
-      select: ['audio'],
     });
     if (!audio) {
       throw new NotFoundException('AudioBook not found');

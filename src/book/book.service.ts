@@ -32,6 +32,7 @@ export class BookService {
     const book = await this.bookRepository.findOne({ where: { id } });
     const imagePath = path.join(book.image);
     const image = fs.readFileSync(imagePath, 'base64');
+    
     return {
       id: book.id,
       title: book.title,

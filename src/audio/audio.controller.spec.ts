@@ -11,11 +11,12 @@ describe('AudioController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AudioController],
-      providers: [AudioService,
+      providers: [
+        AudioService,
         {
           provide: getRepositoryToken(Audio),
           useClass: Repository,
-        }
+        },
       ],
     }).compile();
 
