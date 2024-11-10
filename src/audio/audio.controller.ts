@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Param, StreamableFile, UploadedFile, UseInterceptors, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  StreamableFile,
+  UploadedFile,
+  UseInterceptors,
+  Query,
+} from '@nestjs/common';
 import { AudioService } from './audio.service';
 import { CreateAudioBookDto } from './dto/create-audio.dto';
 import { ApiOperation, ApiTags, ApiBody, ApiParam, ApiConsumes, ApiQuery } from '@nestjs/swagger';
@@ -12,6 +22,7 @@ import { UploadAudioDto } from './dto/upload-audio.dto';
 export class AudioController {
   constructor(private readonly audioService: AudioService) {}
 
+  // >> legacy
   @Post()
   @ApiOperation({ summary: 'Create audio book' })
   @ApiBody({ type: CreateAudioBookDto })
@@ -23,8 +34,33 @@ export class AudioController {
   @ApiOperation({ summary: 'Get audio book by bookId and userId' })
   @ApiQuery({ name: 'bookId', type: Number })
   @ApiQuery({ name: 'userId', type: Number })
-  async findOne(@Query('bookId') bookId: number, @Query('userId') userId: number): Promise<StreamableFile> {
-    return this.audioService.findOne(bookId, userId);
+  async findOne(
+    @Query('bookId') bookId: number,
+    @Query('userId') userId: number,
+  ): Promise<StreamableFile> {
+    return this.audioService.getAudioStreamFull(bookId, userId);
+  }
+
+  // << legacy end
+
+  @Post('sentence')
+  @ApiOperation({ summary: 'Create audio book' })
+  @ApiBody({ type: CreateAudioBookDto })
+  createSentence(@Body() createAudioDto: CreateAudioBookDto) {
+    return this.audioService.createAudioBookSentence(createAudioDto);
+  }
+
+  @Get('sentence')
+  @ApiOperation({ summary: 'Get audio book by sentence' })
+  @ApiQuery({ name: 'bookId', type: Number })
+  @ApiQuery({ name: 'userId', type: Number })
+  async findSentence(
+    @Query('bookId') bookId: number,
+    @Query('userId') userId: number,
+    @Query('idx') idx: number,
+  ) {
+    //TODO : sentence generate
+    return this.audioService.getAudioStreamSentence(bookId, userId, idx);
   }
 
   @Post('upload')
@@ -32,17 +68,19 @@ export class AudioController {
   @ApiParam({ name: 'userId', type: Number })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: UploadAudioDto })
-  @UseInterceptors(FileInterceptor('file', {
-    storage: diskStorage({
-      destination: './uploads',
-      filename: (req, file, cb) => {
-        const ext = path.extname(file.originalname);
-        const filename = `${Date.now()}${ext}`;
-        cb(null, filename);
-      },
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          const ext = path.extname(file.originalname);
+          const filename = `${Date.now()}${ext}`;
+          cb(null, filename);
+        },
+      }),
     }),
-  }))
+  )
   async uploadAudio(@UploadedFile() file: Express.Multer.File, @Param('userId') userId: number) {
-    return this.audioService.uploadAudio(file,  userId);
+    return this.audioService.uploadAudio(file, userId);
   }
 }

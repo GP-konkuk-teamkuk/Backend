@@ -15,4 +15,7 @@ export class Audio {
 
   @Column({ type: 'varchar', length: 255, nullable: false })
   audio: string;
+
+  @Column({type: 'number', nullable: false})
+  length: number;
 }

@@ -23,17 +23,20 @@ import { join } from 'path';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'], // Ensure this line is included
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
       }),
       inject: [ConfigService],
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public'), // Path to your static files
+      rootPath: join(__dirname, '..', 'public'),
     }),
-    UserModule, AdminModule, AudioModule, BookModule],
+    UserModule,
+    AdminModule,
+    AudioModule,
+    BookModule,
+  ],
   controllers: [],
   providers: [],
 })
 export class AppModule {}
-

@@ -7,6 +7,12 @@ import { BookService } from './book.service';
 export class BookController {
   constructor(private readonly bookService: BookService) {}
 
+  @Get('/id')
+  @ApiOperation({ summary: 'Get book with pagination' })
+  findPage(@Query('bookId') bookId: number) {
+    return this.bookService.findOne(bookId);
+  }
+
   @Get('/detail')
   @ApiOperation({ summary: 'Get book by ID' })
   findOne(@Query('bookId') bookId: number) {

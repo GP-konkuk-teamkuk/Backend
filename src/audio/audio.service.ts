@@ -57,8 +57,78 @@ export class AudioService {
     return { message: 'Audiobook Created', audioId: audio.id };
   }
 
-  async findOne(bookId: number, userId: number): Promise<StreamableFile> {
-    console.error(bookId, userId);
+  async createAudioBookSentence(createAudioDto: CreateAudioBookDto) {
+    const { bookId, userId } = createAudioDto;
+
+    const book = await this.bookRepository.findOne({ where: { id: bookId } });
+    if (!book) {
+      throw new NotFoundException('Book not found');
+    }
+    const textFilePath = path.join(`${book.detail}`);
+    if (!fs.existsSync(textFilePath)) {
+      throw new NotFoundException('Text file not found');
+    }
+
+    const textContent = fs.readFileSync(textFilePath, 'utf8');
+    const seperateTextContent = textContent.split('.');
+
+    const currentDir = __dirname;
+    const hashAndTime = `${bookId}_${userId}`;
+    const outputFileName = `${hashAndTime}.wav`;
+    const outputFilePath = path.join(
+      currentDir,
+      '..',
+      '..',
+      'sv2tts_korean',
+      'synthesized_samples',
+      outputFileName,
+    );
+    seperateTextContent.forEach(async (val, idx) => {
+      const command = `conda run -n myenv python ${path.join(currentDir, '..', '..', 'sv2tts_korean', 'synthesize_voice.py')} --text "${val}" --hash_and_time ${hashAndTime}-${idx}`;
+      execSync(command);
+    });
+
+    const audio = new Audio();
+    audio.book = book;
+    audio.user = await this.userRepository.findOne({ where: { id: userId } });
+    audio.audio = outputFilePath;
+    audio.length = seperateTextContent.length;
+
+    await this.audioRepository.save(audio);
+    return { message: 'Audiobook Created', audioId: audio.id, length: audio.length };
+  }
+
+  async getAudioStreamFull(bookId: number, userId: number): Promise<StreamableFile> {
+    const audio = await this.audioRepository.findOne({
+      where: {
+        book: { id: bookId },
+        user: { id: userId },
+      },
+    });
+    if (!audio) {
+      throw new NotFoundException('AudioBook not found');
+    }
+
+    const filePath = audio.audio;
+    if (!fs.existsSync(filePath)) {
+      throw new NotFoundException('Audio file not found');
+    }
+
+    const file = fs.createReadStream(filePath);
+    return new StreamableFile(file);
+  }
+
+  // 오디오 - /api/audio/sentence - bookId, userId, idx querystring, get
+
+  // sentence 강조 -> audio 가 끝날때마다 fe 각 문장을 bold 처리 해주면 됨.
+  // sentence -> text 전체를 보내줌. get /api/book/detail <- 여기서 가져오면 됨.
+  // 
+
+  async getAudioStreamSentence(
+    bookId: number,
+    userId: number,
+    idx: number,
+  ): Promise<StreamableFile> {
     const audio = await this.audioRepository.findOne({
       where: {
         book: { id: bookId },
@@ -79,7 +149,6 @@ export class AudioService {
   }
 
   async uploadAudio(file: Express.Multer.File, userId: number) {
-    console.error(userId);
     if (!file) {
       throw new BadRequestException('No file uploaded');
     }
