@@ -1,6 +1,13 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiResponse } from '@nestjs/swagger';
 import { BookService } from './book.service';
+import { Book } from './entities/book.entity';
+
+class BookResponse {
+  id: number;
+  title: string;
+  image: string;
+}
 
 @ApiTags('book')
 @Controller('/api/book')
@@ -9,18 +16,57 @@ export class BookController {
 
   @Get('/id')
   @ApiOperation({ summary: 'Get book with pagination' })
+  @ApiResponse({
+    status: 200,
+    description: 'The found book',
+    schema: {
+      type: 'object',
+      properties: {
+        id: { type: 'number', example: 1 },
+        title: { type: 'string', example: 'Book Title' },
+        image: { type: 'string', example: 'data:image/jpeg;base64,...' },
+      },
+    },
+  })
   findPage(@Query('bookId') bookId: number) {
     return this.bookService.findOne(bookId);
   }
 
   @Get('/detail')
   @ApiOperation({ summary: 'Get book by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'The found book',
+    schema: {
+      type: 'object',
+      properties: {
+        id: { type: 'number', example: 1 },
+        title: { type: 'string', example: 'Book Title' },
+        image: { type: 'string', example: 'data:image/jpeg;base64,...' },
+      },
+    },
+  })
   findOne(@Query('bookId') bookId: number) {
     return this.bookService.findOne(bookId);
   }
 
   @Get()
   @ApiOperation({ summary: 'Get books with pagination' })
+  @ApiResponse({
+    status: 200,
+    description: 'The list of books',
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'number', example: 1 },
+          title: { type: 'string', example: 'Book Title' },
+          image: { type: 'string', example: 'data:image/jpeg;base64,...' },
+        },
+      },
+    },
+  })
   findAll(@Query('page') page: number, @Query('limit') limit: number) {
     return this.bookService.findPage(page, limit);
   }

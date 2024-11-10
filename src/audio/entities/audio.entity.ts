@@ -16,6 +16,6 @@ export class Audio {
   @Column({ type: 'varchar', length: 255, nullable: false })
   audio: string;
 
-  @Column({type: 'number', nullable: false})
+  @Column({type: 'integer', nullable: false})
   length: number;
 }
