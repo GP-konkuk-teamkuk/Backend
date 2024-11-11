@@ -24,6 +24,8 @@ export class BookService {
         id: book.id,
         title: book.title,
         image: `data:image/jpeg;base64,${image}`,
+        author: book.author,
+        runningTime: book.runningTime,
       };
     });
   }
@@ -32,11 +34,16 @@ export class BookService {
     const book = await this.bookRepository.findOne({ where: { id } });
     const imagePath = path.join(book.image);
     const image = fs.readFileSync(imagePath, 'base64');
-    
+    const intro = fs.readFileSync(book.detail, 'utf8');
+
     return {
       id: book.id,
       title: book.title,
-      image: `data:image/jpeg;base64,${image}`,
+      image,
+      author: book.author,
+      runningTime: book.runningTime,
+      press: book.press,
+      intro,
     };
   }
 }

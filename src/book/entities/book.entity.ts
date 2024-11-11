@@ -6,15 +6,24 @@ export class Book {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length : 100,  nullable: false })
+  @Column({ type: 'varchar', length: 100, nullable: false })
   image: string;
 
-  @Column({ type: 'varchar', length : 100, nullable: false })
+  @Column({ type: 'varchar', length: 100, nullable: false })
   detail: string;
 
   @Column({ type: 'varchar', length: 100, nullable: false })
   title: string;
 
-  @OneToMany(() => Audio, (audio) => audio.book)
+  @Column({ type: 'varchar', length: 100, nullable: false })
+  author: string;
+
+  @Column({ type: 'integer', nullable: false })
+  runningTime: number;
+
+  @Column({ type: 'varchar', length: 100, nullable: false })
+  press: string;
+
+  @OneToMany(() => Audio, audio => audio.book)
   audios: Audio[];
 }

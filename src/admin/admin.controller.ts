@@ -22,6 +22,6 @@ export class AdminController {
     @Body() createBookDto: CreateBookDto,
   ): Promise<void> {
     const [image, text] = files;
-    await this.adminService.uploadBook(image, text, createBookDto.title);
+    await this.adminService.uploadBook(image, text, createBookDto);
   }
 }

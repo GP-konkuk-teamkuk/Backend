@@ -9,12 +9,14 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
-  app.use(session({
-    secret: configService.get<string>('SESSION_SECRET'),
-    resave: false,
-    saveUninitialized: false,
-    cookie: { maxAge: 3600000 } // 1 hour
-  }));
+  app.use(
+    session({
+      secret: configService.get<string>('SESSION_SECRET'),
+      resave: false,
+      saveUninitialized: false,
+      cookie: { maxAge: 3600000 }, // 1 hour
+    }),
+  );
 
   app.use((req, res, next) => {
     if (req.session && req.session.userId) {
@@ -26,7 +28,6 @@ async function bootstrap() {
   // test cors
   const corsOptions: CorsOptions = {
     origin: 'http://localhost:3000',
-    methods: 'GET,HEAD,PUT,POST,DELETE',
     credentials: true,
   };
   app.enableCors(corsOptions);

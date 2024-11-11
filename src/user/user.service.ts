@@ -15,9 +15,14 @@ export class UserService {
 
   async login(loginUserDto: LoginUserDto) {
     const { id: email, pw: password } = loginUserDto;
+
+    console.log(email, password);
     const user = await this.userRepository.findOne({ where: { email } });
+    console.log(user);
     if (user && (await bcrypt.compare(password, user.password))) {
-      return { userId: user.id };
+      console.error('login');
+      console.log(user);
+      return { nickname: user.user, userId: user.id, id: user.email };
     }
     throw new Error('Invalid credentials');
   }
@@ -27,6 +32,7 @@ export class UserService {
   }
 
   async register(createUserDto: CreateUserDto) {
+    console.log(createUserDto);
     const { nickname, id: email, pw: password } = createUserDto;
 
     // authentication logic
@@ -42,6 +48,8 @@ export class UserService {
     //if (password.length < 8) {
     //  throw new BadRequestException('Password must be at least 8 characters long');
     //}
+
+    console.error('register');
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = this.userRepository.create({ user: nickname, email, password: hashedPassword });

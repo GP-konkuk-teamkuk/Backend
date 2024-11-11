@@ -22,6 +22,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('/login')
+  @HttpCode(200)
   @ApiOperation({ summary: 'Login user' })
   @ApiResponse({
     status: 200,
@@ -40,6 +41,7 @@ export class UserController {
   }
 
   @Post('/logout')
+  @HttpCode(200)
   @ApiOperation({ summary: 'Logout user' })
   @ApiResponse({
     status: 200,

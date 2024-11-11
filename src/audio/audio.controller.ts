@@ -11,7 +11,15 @@ import {
 } from '@nestjs/common';
 import { AudioService } from './audio.service';
 import { CreateAudioBookDto } from './dto/create-audio.dto';
-import { ApiOperation, ApiTags, ApiResponse, ApiBody, ApiParam, ApiConsumes, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiTags,
+  ApiResponse,
+  ApiBody,
+  ApiParam,
+  ApiConsumes,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as path from 'path';
@@ -39,6 +47,7 @@ export class AudioController {
     },
   })
   create(@Body() createAudioDto: CreateAudioBookDto) {
+    console.log(createAudioDto);
     return this.audioService.createAudioBook(createAudioDto);
   }
 
@@ -52,7 +61,7 @@ export class AudioController {
     schema: {
       type: 'object',
       properties: {
-        file: {type: 'Promise<StreambleFile>', example: 'Promise<StreamableFile>'}
+        file: { type: 'Promise<StreambleFile>', example: 'Promise<StreamableFile>' },
       },
     },
   })
@@ -112,7 +121,8 @@ export class AudioController {
       }),
     }),
   )
-  async uploadAudio(@UploadedFile() file: Express.Multer.File, @Param('userId') userId: number) {
+  async uploadAudio(@UploadedFile() file: Express.Multer.File, @Body('userId') userId: number) {
+    console.log(userId);
     return this.audioService.uploadAudio(file, userId);
   }
 }

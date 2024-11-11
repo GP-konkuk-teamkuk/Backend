@@ -45,15 +45,21 @@ export class AudioService {
       'synthesized_samples',
       outputFileName,
     );
+
+    console.log(outputFilePath);
     const command = `conda run -n myenv python ${path.join(currentDir, '..', '..', 'sv2tts_korean', 'synthesize_voice.py')} --text "${textContent}" --hash_and_time ${hashAndTime}`;
     execSync(command);
+    console.log('after python code');
 
     const audio = new Audio();
     audio.book = book;
     audio.user = await this.userRepository.findOne({ where: { id: userId } });
     audio.audio = outputFilePath;
+    //TODO : literal
+    audio.length = 100;
     await this.audioRepository.save(audio);
 
+    console.error('after save repo');
     return { message: 'Audiobook Created', audioId: audio.id };
   }
 
@@ -121,8 +127,8 @@ export class AudioService {
   // 오디오 - /api/audio/sentence - bookId, userId, idx querystring, get
 
   // sentence 강조 -> audio 가 끝날때마다 fe 각 문장을 bold 처리 해주면 됨.
+  //
   // sentence -> text 전체를 보내줌. get /api/book/detail <- 여기서 가져오면 됨.
-  // 
 
   async getAudioStreamSentence(
     bookId: number,
@@ -171,6 +177,6 @@ export class AudioService {
       `${userId}.pkl`,
     );
     this.userRepository.save(user);
-    return {userId: user.id};
+    return { userId: user.id };
   }
 }
