@@ -24,6 +24,9 @@ export class Book {
   @Column({ type: 'varchar', length: 100, nullable: false })
   press: string;
 
+  @Column({ type: 'varchar', length: 100, nullable: false })
+  content: string;
+
   @OneToMany(() => Audio, audio => audio.book)
   audios: Audio[];
 }

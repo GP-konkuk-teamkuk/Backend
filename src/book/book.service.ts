@@ -44,6 +44,7 @@ export class BookService {
       runningTime: book.runningTime,
       press: book.press,
       intro,
+      content,
     };
   }
 }
