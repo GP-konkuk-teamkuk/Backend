@@ -48,7 +48,9 @@ export class BookController {
     },
   })
   findBookById(@Query('bookId') bookId: number) {
-    return this.bookService.findOne(bookId);
+    const result = this.bookService.findOne(bookId);
+    result.then((val) => console.log(JSON.stringify(val)));
+    return result;
   }
 
   @Get()

@@ -69,6 +69,7 @@ export class AudioController {
     @Query('bookId') bookId: number,
     @Query('userId') userId: number,
   ): Promise<StreamableFile> {
+    console.error("findone");
     return this.audioService.getAudioStreamFull(bookId, userId);
   }
 
@@ -78,6 +79,7 @@ export class AudioController {
   @ApiOperation({ summary: 'Create audio book, not used' })
   @ApiBody({ type: CreateAudioBookDto })
   createSentence(@Body() createAudioDto: CreateAudioBookDto) {
+    console.error("sentence");
     return this.audioService.createAudioBookSentence(createAudioDto);
   }
 
@@ -91,7 +93,8 @@ export class AudioController {
     @Query('idx') idx: number,
   ) {
     //TODO : sentence generate
-    return this.audioService.getAudioStreamSentence(bookId, userId, idx);
+    return this.audioService.getAudioStreamFull(bookId, userId);
+    //return this.audioService.getAudioStreamSentence(bookId, userId, idx);
   }
 
   @Post('upload')

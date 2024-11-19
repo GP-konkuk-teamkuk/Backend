@@ -35,7 +35,7 @@ export class AudioService {
 
     const textContent = fs.readFileSync(textFilePath, 'utf8');
     const currentDir = __dirname;
-    const hashAndTime = `${bookId}_${userId}`;
+    const hashAndTime = `${userId}_${bookId}`;
     const outputFileName = `${hashAndTime}.wav`;
     const outputFilePath = path.join(
       currentDir,
@@ -46,8 +46,9 @@ export class AudioService {
       outputFileName,
     );
 
-    console.log(outputFilePath);
-    const command = `conda run -n myenv python ${path.join(currentDir, '..', '..', 'sv2tts_korean', 'synthesize_voice.py')} --text "${textContent}" --hash_and_time ${hashAndTime}`;
+    const sentence = textContent.split(".")[0];
+
+    const command = `conda run -n myenv python ${path.join(currentDir, '..', '..', 'sv2tts_korean', 'synthesize_voice.py')} --text "${sentence}" --hash_and_time ${hashAndTime}`;
     execSync(command);
     console.log('after python code');
 
