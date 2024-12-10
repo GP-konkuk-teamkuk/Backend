@@ -1,6 +1,6 @@
 ---
-name: "[Feature] - "
-about: 기능 구현사항
+name: "[Bug] - "
+about: 버그 리포트
 title: ''
 labels: ''
 assignees: ''
@@ -12,5 +12,3 @@ assignees: ''
 # Checklist
 
 - [ ]
-
-# ETC
