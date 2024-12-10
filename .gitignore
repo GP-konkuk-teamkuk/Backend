@@ -62,3 +62,6 @@ Frontend/*
 test.env
 uploads
 sample
+
+# vscode
+.vscode
