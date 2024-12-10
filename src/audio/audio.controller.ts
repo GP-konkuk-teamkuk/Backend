@@ -1,3 +1,4 @@
+import * as path from 'path';
 import {
   Controller,
   Get,
@@ -8,43 +9,38 @@ import {
   UseInterceptors,
   Query,
 } from '@nestjs/common';
-import { AudioService } from './audio.service';
-import { CreateAudioBookDto } from './dto/create-audio.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiOperation,
   ApiTags,
-  ApiResponse,
   ApiBody,
   ApiParam,
   ApiConsumes,
   ApiQuery,
+  ApiOkResponse,
 } from '@nestjs/swagger';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import * as path from 'path';
-import { UploadAudioDto } from './dto/upload-audio.dto';
+import { AudioService } from './audio.service';
+import { CreateAudioBookSentenceResponse } from './dto/create-audio-book-sentence.response';
+import { CreateAudioBookResponse } from './dto/create-audio-book.response';
+import { CreateAudioBookRequest } from './dto/create-audio.request';
+import { UploadAudioRequest } from './dto/upload-audio.request';
+import { UploadAudioResponse } from './dto/upload-audio.response';
 
 @ApiTags('audio')
-@Controller('/api/audio')
+@Controller('audio')
 export class AudioController {
   constructor(private readonly audioService: AudioService) {}
 
   // >> legacy
   @Post()
   @ApiOperation({ summary: 'Create audio book' })
-  @ApiBody({ type: CreateAudioBookDto })
-  @ApiResponse({
-    status: 200,
+  @ApiBody({ type: CreateAudioBookRequest })
+  @ApiOkResponse({
     description: 'Get audio book by bookId and userId',
-    schema: {
-      type: 'object',
-      properties: {
-        message: { type: 'message', example: 'Audiobook Created' },
-        audioId: { type: 'number', example: 1 },
-      },
-    },
+    type: [CreateAudioBookResponse],
   })
-  create(@Body() createAudioDto: CreateAudioBookDto) {
+  create(@Body() createAudioDto: CreateAudioBookRequest): Promise<CreateAudioBookResponse> {
     return this.audioService.createAudioBook(createAudioDto);
   }
 
@@ -52,15 +48,9 @@ export class AudioController {
   @ApiOperation({ summary: 'Get audio book by bookId and userId, use in audiobook detail page' })
   @ApiQuery({ name: 'bookId', type: Number })
   @ApiQuery({ name: 'userId', type: Number })
-  @ApiResponse({
-    status: 200,
+  @ApiOkResponse({
     description: 'Get audio book by bookId and userId',
-    schema: {
-      type: 'object',
-      properties: {
-        file: { type: 'Promise<StreambleFile>', example: 'Promise<StreamableFile>' },
-      },
-    },
+    type: [StreamableFile],
   })
   async findOne(
     @Query('bookId') bookId: number,
@@ -73,8 +63,12 @@ export class AudioController {
 
   @Post('sentence')
   @ApiOperation({ summary: 'Create audio book, not used' })
-  @ApiBody({ type: CreateAudioBookDto })
-  createSentence(@Body() createAudioDto: CreateAudioBookDto) {
+  @ApiBody({ type: CreateAudioBookRequest })
+  @ApiOkResponse({
+    description: 'Sucess to generate audio file',
+    type: [CreateAudioBookSentenceResponse],
+  })
+  createSentence(@Body() createAudioDto: CreateAudioBookRequest) {
     return this.audioService.createAudioBookSentence(createAudioDto);
   }
 
@@ -82,6 +76,10 @@ export class AudioController {
   @ApiOperation({ summary: 'Get audio book by sentence, not used' })
   @ApiQuery({ name: 'bookId', type: Number })
   @ApiQuery({ name: 'userId', type: Number })
+  @ApiOkResponse({
+    description: 'Return audio generated file',
+    type: [StreamableFile],
+  })
   async findSentence(
     @Query('bookId') bookId: number,
     @Query('userId') userId: number,
@@ -96,16 +94,10 @@ export class AudioController {
   @ApiOperation({ summary: 'Upload audio file' })
   @ApiParam({ name: 'userId', type: Number })
   @ApiConsumes('multipart/form-data')
-  @ApiBody({ type: UploadAudioDto })
-  @ApiResponse({
-    status: 200,
+  @ApiBody({ type: UploadAudioRequest })
+  @ApiOkResponse({
     description: 'Get audio book by bookId and userId',
-    schema: {
-      type: 'object',
-      properties: {
-        userId: { type: 'number', example: 1 },
-      },
-    },
+    type: [UploadAudioResponse],
   })
   @UseInterceptors(
     FileInterceptor('file', {
@@ -119,7 +111,10 @@ export class AudioController {
       }),
     }),
   )
-  async uploadAudio(@UploadedFile() file: Express.Multer.File, @Body('userId') userId: number) {
+  async uploadAudio(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('userId') userId: number,
+  ): Promise<UploadAudioResponse> {
     return this.audioService.uploadAudio(file, userId);
   }
 }

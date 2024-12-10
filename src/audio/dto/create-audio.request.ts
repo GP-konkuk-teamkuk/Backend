@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateAudioBookDto {
+export class CreateAudioBookRequest {
   @ApiProperty({ description: 'ID of the book', example: 1 })
   bookId: number;
 

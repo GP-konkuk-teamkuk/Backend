@@ -1,14 +1,17 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CreateAudioBookDto } from './dto/create-audio.dto';
-import { Audio } from './entities/audio.entity';
+import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { StreamableFile } from '@nestjs/common';
-import { execSync } from 'child_process';
-import { User } from '../user/entities/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { Book } from '../book/entities/book.entity';
+import { User } from '../user/entities/user.entity';
+import { CreateAudioBookSentenceResponse } from './dto/create-audio-book-sentence.response';
+import { CreateAudioBookResponse } from './dto/create-audio-book.response';
+import { CreateAudioBookRequest } from './dto/create-audio.request';
+import { UploadAudioResponse } from './dto/upload-audio.response';
+import { Audio } from './entities/audio.entity';
 
 @Injectable()
 export class AudioService {
@@ -21,7 +24,7 @@ export class AudioService {
     private bookRepository: Repository<Book>,
   ) {}
 
-  async createAudioBook(createAudioDto: CreateAudioBookDto) {
+  async createAudioBook(createAudioDto: CreateAudioBookRequest) {
     const { bookId, userId } = createAudioDto;
 
     const book = await this.bookRepository.findOne({ where: { id: bookId } });
@@ -46,7 +49,7 @@ export class AudioService {
       outputFileName,
     );
 
-    const sentence = textContent.split(".")[0];
+    const sentence = textContent.split('.')[0];
 
     const command = `conda run -n myenv python ${path.join(currentDir, '..', '..', 'sv2tts_korean', 'synthesize_voice.py')} --text "${sentence}" --hash_and_time ${hashAndTime}`;
     execSync(command);
@@ -59,10 +62,12 @@ export class AudioService {
     audio.length = 100;
     await this.audioRepository.save(audio);
 
-    return { message: 'Audiobook Created', audioId: audio.id };
+    const result = new CreateAudioBookResponse('Audiobook Created', audio.id);
+
+    return result;
   }
 
-  async createAudioBookSentence(createAudioDto: CreateAudioBookDto) {
+  async createAudioBookSentence(createAudioDto: CreateAudioBookRequest) {
     const { bookId, userId } = createAudioDto;
 
     const book = await this.bookRepository.findOne({ where: { id: bookId } });
@@ -100,7 +105,9 @@ export class AudioService {
     audio.length = seperateTextContent.length;
 
     await this.audioRepository.save(audio);
-    return { message: 'Audiobook Created', audioId: audio.id, length: audio.length };
+
+    const result = new CreateAudioBookSentenceResponse('Audiobook Created', audio.id, audio.length);
+    return result;
   }
 
   async getAudioStreamFull(bookId: number, userId: number): Promise<StreamableFile> {
@@ -176,6 +183,6 @@ export class AudioService {
       `${userId}.pkl`,
     );
     this.userRepository.save(user);
-    return { userId: user.id };
+    return new UploadAudioResponse(user.id);
   }
 }
