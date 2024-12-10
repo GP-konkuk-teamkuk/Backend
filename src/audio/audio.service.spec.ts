@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AudioService } from './audio.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Audio } from './entities/audio.entity';
 import { Repository } from 'typeorm';
+import { AudioService } from './audio.service';
+import { Audio } from './entities/audio.entity';
 
 describe('AudioService', () => {
   let service: AudioService;

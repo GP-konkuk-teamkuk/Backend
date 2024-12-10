@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BookService } from './book.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Book } from './entities/book.entity';
 import { Repository } from 'typeorm';
+import { BookService } from './book.service';
+import { Book } from './entities/book.entity';
 
 describe('BookService', () => {
   let service: BookService;

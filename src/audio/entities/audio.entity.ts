@@ -7,15 +7,15 @@ export class Audio {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (user) => user.audios, { nullable: false })
+  @ManyToOne(() => User, user => user.audios, { nullable: false })
   user: User;
 
-  @ManyToOne(() => Book, (book) => book.audios, { nullable: false })
+  @ManyToOne(() => Book, book => book.audios, { nullable: false })
   book: Book;
 
   @Column({ type: 'varchar', length: 255, nullable: false })
   audio: string;
 
-  @Column({type: 'integer', nullable: false})
+  @Column({ type: 'integer', nullable: false })
   length: number;
 }

@@ -1,16 +1,9 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiResponse } from '@nestjs/swagger';
 import { BookService } from './book.service';
-import { Book } from './entities/book.entity';
-
-class BookResponse {
-  id: number;
-  title: string;
-  image: string;
-}
 
 @ApiTags('book')
-@Controller('/api/book')
+@Controller('book')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
 
@@ -49,7 +42,7 @@ export class BookController {
   })
   findBookById(@Query('bookId') bookId: number) {
     const result = this.bookService.findOne(bookId);
-    result.then((val) => console.log(JSON.stringify(val)));
+    result.then(val => console.log(JSON.stringify(val)));
     return result;
   }
 

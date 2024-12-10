@@ -1,9 +1,9 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import * as session from 'express-session';
 import { ConfigService } from '@nestjs/config';
-import { useSwagger } from './config/swagger.config';
+import { NestFactory } from '@nestjs/core';
+import * as session from 'express-session';
+import { AppModule } from './app.module';
 import { setCors } from './config/cors.config';
+import { useSwagger } from './config/swagger.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

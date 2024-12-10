@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { AudioController } from './audio.controller';
 import { AudioService } from './audio.service';
 import { Audio } from './entities/audio.entity';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
 describe('AudioController', () => {
   let controller: AudioController;

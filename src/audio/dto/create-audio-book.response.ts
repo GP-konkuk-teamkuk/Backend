@@ -7,8 +7,8 @@ export class CreateAudioBookResponse {
   @ApiProperty({ description: 'ID of the audio', example: 1 })
   audioId: number;
 
-  constructor(message: string, audioId : number) {
-	this.message = message;
-	this.audioId = audioId;
+  constructor(message: string, audioId: number) {
+    this.message = message;
+    this.audioId = audioId;
   }
 }

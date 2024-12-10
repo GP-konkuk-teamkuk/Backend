@@ -49,7 +49,7 @@ export class AudioController {
   @ApiQuery({ name: 'bookId', type: Number })
   @ApiQuery({ name: 'userId', type: Number })
   @ApiOkResponse({
-    description: 'Get audio book by bookId and userId',
+    description: 'Get audio book by bookId and userId using streamable file',
     type: [StreamableFile],
   })
   async findOne(
@@ -77,7 +77,7 @@ export class AudioController {
   @ApiQuery({ name: 'bookId', type: Number })
   @ApiQuery({ name: 'userId', type: Number })
   @ApiOkResponse({
-    description: 'Return audio generated file',
+    description: 'Return audio generated file using streamable file',
     type: [StreamableFile],
   })
   async findSentence(

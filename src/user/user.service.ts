@@ -1,10 +1,10 @@
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
 import { CreateUserRequest } from './dto/create-user.request';
 import { LoginUserRequest } from './dto/login-user.request';
-import * as bcrypt from 'bcrypt';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -31,19 +31,18 @@ export class UserService {
   async register(createUserDto: CreateUserRequest) {
     const { nickname, id: email, pw: password } = createUserDto;
 
-    // authentication logic
-    //if (nickname.length < 2 || nickname.length > 15) {
-    //  throw new BadRequestException('Nickname must be between 2 and 15 characters');
-    //}
+    if (nickname.length < 2 || nickname.length > 15) {
+      throw new BadRequestException('Nickname must be between 2 and 15 characters');
+    }
 
-    //const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    //if (!emailRegex.test(email)) {
-    //  throw new BadRequestException('Invalid email format');
-    //}
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      throw new BadRequestException('Invalid email format');
+    }
 
-    //if (password.length < 8) {
-    //  throw new BadRequestException('Password must be at least 8 characters long');
-    //}
+    if (password.length < 8) {
+      throw new BadRequestException('Password must be at least 8 characters long');
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = this.userRepository.create({ user: nickname, email, password: hashedPassword });

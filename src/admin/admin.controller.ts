@@ -4,7 +4,7 @@ import { AdminService } from './admin.service';
 import { CreateBookDto } from '../book/dto/create-book.dto';
 import { ApiTags, ApiOperation, ApiConsumes, ApiBody } from '@nestjs/swagger';
 
-@ApiTags('/api/admin')
+@ApiTags('admin')
 @Controller('manage')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}

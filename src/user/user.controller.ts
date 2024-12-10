@@ -1,27 +1,15 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Session,
-  HttpCode,
-  HttpStatus,
-} from '@nestjs/common';
-import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { Controller, Post, Body, Session } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { LoginUserDto } from './dto/login-user.dto';
+import { CreateUserRequest } from './dto/create-user.request';
+import { LoginUserRequest } from './dto/login-user.request';
+import { UserService } from './user.service';
 
 @ApiTags('user')
-@Controller('/api')
+@Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post('/login')
-  @HttpCode(200)
+  @Post('login')
   @ApiOperation({ summary: 'Login user' })
   @ApiResponse({
     status: 200,
@@ -33,14 +21,13 @@ export class UserController {
       },
     },
   })
-  async loginUser(@Body() loginUserDto: LoginUserDto, @Session() session: any) {
+  async loginUser(@Body() loginUserDto: LoginUserRequest, @Session() session) {
     const result = await this.userService.login(loginUserDto);
     session.userId = result.userId;
     return result;
   }
 
-  @Post('/logout')
-  @HttpCode(200)
+  @Post('logout')
   @ApiOperation({ summary: 'Logout user' })
   @ApiResponse({
     status: 200,
@@ -52,7 +39,7 @@ export class UserController {
       },
     },
   })
-  async logoutUser(@Session() session: any) {
+  async logoutUser(@Session() session) {
     if (session.userId) {
       const result = await this.userService.logout(session.userId);
       session.destroy();
@@ -62,11 +49,10 @@ export class UserController {
     }
   }
 
-  @Post('/register')
-  @HttpCode(HttpStatus.CREATED)
+  @Post('register')
   @ApiOperation({ summary: 'Register user' })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'Login',
     schema: {
       type: 'object',
@@ -75,7 +61,7 @@ export class UserController {
       },
     },
   })
-  async register(@Body() createUserDto: CreateUserDto) {
+  async register(@Body() createUserDto: CreateUserRequest) {
     return await this.userService.register(createUserDto);
   }
 }
