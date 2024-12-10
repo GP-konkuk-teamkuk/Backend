@@ -1,6 +1,6 @@
 ---
-name: "[Bug] - "
-about: 버그 리포트
+name: Bug Issue
+about: Fix Bug
 title: ''
 labels: bug
 assignees: ''
@@ -9,6 +9,8 @@ assignees: ''
 
 # Description
 
-# Checklist
+# To-do
 
 - [ ]
+
+# ETC
