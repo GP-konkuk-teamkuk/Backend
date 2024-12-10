@@ -2,8 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as session from 'express-session';
 import { ConfigService } from '@nestjs/config';
-import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { useSwagger } from './config/swagger.config';
+import { setCors } from './config/cors.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,13 +26,7 @@ async function bootstrap() {
     next();
   });
 
-  // test cors
-  const corsOptions: CorsOptions = {
-    origin: 'http://localhost:3000',
-    credentials: true,
-  };
-  app.enableCors(corsOptions);
-
+  setCors(app);
   useSwagger(app);
 
   await app.listen(configService.get<number>('PORT'));
