@@ -42,8 +42,6 @@ export class BookService {
       prev += cur + ".\n\t";
       return prev;
     }, "");
-    console.log(content);
-    console.log(intro);
 
     return {
       id: book.id,

@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Param,
   StreamableFile,
   UploadedFile,
   UseInterceptors,
@@ -24,7 +23,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as path from 'path';
 import { UploadAudioDto } from './dto/upload-audio.dto';
-import { Stream } from 'stream';
 
 @ApiTags('audio')
 @Controller('/api/audio')
@@ -47,7 +45,6 @@ export class AudioController {
     },
   })
   create(@Body() createAudioDto: CreateAudioBookDto) {
-    console.log(createAudioDto);
     return this.audioService.createAudioBook(createAudioDto);
   }
 
@@ -69,7 +66,6 @@ export class AudioController {
     @Query('bookId') bookId: number,
     @Query('userId') userId: number,
   ): Promise<StreamableFile> {
-    console.error("findone");
     return this.audioService.getAudioStreamFull(bookId, userId);
   }
 
@@ -79,7 +75,6 @@ export class AudioController {
   @ApiOperation({ summary: 'Create audio book, not used' })
   @ApiBody({ type: CreateAudioBookDto })
   createSentence(@Body() createAudioDto: CreateAudioBookDto) {
-    console.error("sentence");
     return this.audioService.createAudioBookSentence(createAudioDto);
   }
 
@@ -125,7 +120,6 @@ export class AudioController {
     }),
   )
   async uploadAudio(@UploadedFile() file: Express.Multer.File, @Body('userId') userId: number) {
-    console.log(userId);
     return this.audioService.uploadAudio(file, userId);
   }
 }

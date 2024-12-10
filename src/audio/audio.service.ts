@@ -50,7 +50,6 @@ export class AudioService {
 
     const command = `conda run -n myenv python ${path.join(currentDir, '..', '..', 'sv2tts_korean', 'synthesize_voice.py')} --text "${sentence}" --hash_and_time ${hashAndTime}`;
     execSync(command);
-    console.log('after python code');
 
     const audio = new Audio();
     audio.book = book;
@@ -60,7 +59,6 @@ export class AudioService {
     audio.length = 100;
     await this.audioRepository.save(audio);
 
-    console.error('after save repo');
     return { message: 'Audiobook Created', audioId: audio.id };
   }
 
