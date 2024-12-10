@@ -1,14 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as session from 'express-session';
 import { ConfigService } from '@nestjs/config';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { useSwagger } from './config/swagger.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
+  app.setGlobalPrefix('api');
   app.use(
     session({
       secret: configService.get<string>('SESSION_SECRET'),
@@ -32,13 +33,7 @@ async function bootstrap() {
   };
   app.enableCors(corsOptions);
 
-  const config = new DocumentBuilder()
-    .setTitle('Audio API')
-    .setDescription('The audio API description')
-    .setVersion('1.0')
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api-docs', app, document);
+  useSwagger(app);
 
   await app.listen(configService.get<number>('PORT'));
 }
