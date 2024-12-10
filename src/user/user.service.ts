@@ -1,9 +1,9 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
+import { CreateUserRequest } from './dto/create-user.request';
+import { LoginUserRequest } from './dto/login-user.request';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -13,21 +13,22 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async login(loginUserDto: LoginUserDto) {
+  async login(loginUserDto: LoginUserRequest) {
     const { id: email, pw: password } = loginUserDto;
 
     const user = await this.userRepository.findOne({ where: { email } });
     if (user && (await bcrypt.compare(password, user.password))) {
       return { nickname: user.user, userId: user.id, id: user.email };
+    } else {
+      throw new NotFoundException('Invalid credentials');
     }
-    throw new Error('Invalid credentials');
   }
 
   async logout(userId: number) {
     return { message: 'User logged out' };
   }
 
-  async register(createUserDto: CreateUserDto) {
+  async register(createUserDto: CreateUserRequest) {
     const { nickname, id: email, pw: password } = createUserDto;
 
     // authentication logic
