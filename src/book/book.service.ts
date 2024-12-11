@@ -58,8 +58,8 @@ export class BookService {
     //    return prev;
     //  }, '');
     const image = await fs.promises.readFile(imagePath, 'base64');
-    const content = await this.splitAndMergeByNewline(book.detail);
-    const intro = await this.splitAndMergeByNewline(book.content);
+    const content = await this.splitAndMergeByNewline(book.content);
+    const intro = await this.splitAndMergeByNewline(book.intro);
 
     return {
       id: book.id,

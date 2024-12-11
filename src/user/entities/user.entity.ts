@@ -18,6 +18,6 @@ export class User {
   @Column({ type: 'varchar', length: 100, nullable: true })
   embedding: string;
 
-  @OneToMany(() => Audio, (audio) => audio.user)
+  @OneToMany(() => Audio, audio => audio.user)
   audios: Audio[];
 }
