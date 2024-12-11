@@ -18,6 +18,7 @@ import { Audio } from './entities/audio.entity';
 export class AudioService {
   private readonly AUDIO_FILE_MIN_DURATION = 5000;
   private readonly AUDIO_FILE_MAX_DURATION = 20000;
+  private readonly AUDIO_FILE_DURATION_TO_MS = 1000;
 
   constructor(
     @InjectRepository(Audio)
@@ -164,22 +165,6 @@ export class AudioService {
     return new StreamableFile(file);
   }
 
-  //private async checkAudioFileLength(filePath: string) {
-  //  try {
-  //    //filePath = path.join(__dirname, '..', '..', filePath);
-  //    await parseFile('uploads/1731242949782.wav');
-  //    const metadata = await parseFile(filePath);
-  //    if (metadata.format.duration < this.AUDIO_FILE_MIN_DURATION) {
-  //      throw new BadRequestException('Audio File is too short');
-  //    } else if (metadata.format.duration > this.AUDIO_FILE_MAX_DURATION) {
-  //      throw new BadRequestException('Audio File is too long');
-  //    }
-  //  } catch (error) {
-  //    console.error(error);
-  //    throw new BadRequestException('Audio file is not valid');
-  //  }
-  //}
-
   private async checkAudioFileLength(filePath: string) {
     const result: ffmpeg.FfprobeData = await new Promise((resolve, reject) => {
       ffmpeg.ffprobe(filePath, (err, data: ffmpeg.FfprobeData) => {
@@ -187,9 +172,15 @@ export class AudioService {
         else resolve(data);
       });
     });
-    if (result.format.duration < this.AUDIO_FILE_MIN_DURATION) {
+    // TODO : 테스트 명세서에 따라 변경 필요
+    if (!result.format.format_name.match('wav')) throw new BadRequestException('Wrong Audio File');
+    if (!result.format.duration) throw new BadRequestException('Wrong Audio File');
+    if (result.format.duration * this.AUDIO_FILE_DURATION_TO_MS < this.AUDIO_FILE_MIN_DURATION) {
       throw new BadRequestException('Audio File is too short');
-    } else if (result.format.duration > this.AUDIO_FILE_MAX_DURATION) {
+    } else if (
+      result.format.duration * this.AUDIO_FILE_DURATION_TO_MS >
+      this.AUDIO_FILE_MAX_DURATION
+    ) {
       throw new BadRequestException('Audio File is too long');
     }
   }
@@ -199,9 +190,6 @@ export class AudioService {
       throw new BadRequestException('No file uploaded');
     }
     await this.checkAudioFileLength(file.path);
-    //const result = await parseStream(file.stream);
-    //console.log(result.format);
-    //await this.checkAudioFileLength(file.path);
 
     const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
