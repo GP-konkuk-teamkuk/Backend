@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AdminService } from './admin.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Book } from 'src/book/entities/book.entity';
 import { AdminController } from './admin.controller';
-import { BookModule } from '../book/book.module';
+import { AdminService } from './admin.service';
 
 @Module({
-  imports: [BookModule],
+  imports: [TypeOrmModule.forFeature([Book])],
   controllers: [AdminController],
   providers: [AdminService],
 })
