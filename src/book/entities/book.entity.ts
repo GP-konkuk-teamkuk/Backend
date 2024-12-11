@@ -10,7 +10,10 @@ export class Book {
   image: string;
 
   @Column({ type: 'varchar', length: 100, nullable: false })
-  detail: string;
+  content: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: false })
+  intro: string;
 
   @Column({ type: 'varchar', length: 100, nullable: false })
   title: string;
@@ -23,9 +26,6 @@ export class Book {
 
   @Column({ type: 'varchar', length: 100, nullable: false })
   press: string;
-
-  @Column({ type: 'varchar', length: 100, nullable: false })
-  content: string;
 
   @OneToMany(() => Audio, audio => audio.book)
   audios: Audio[];

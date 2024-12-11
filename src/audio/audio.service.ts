@@ -36,7 +36,7 @@ export class AudioService {
     if (!book) {
       throw new NotFoundException('Book not found');
     }
-    const textFilePath = path.join(`${book.detail}`);
+    const textFilePath = path.join(`${book.content}`);
     if (!fs.existsSync(textFilePath)) {
       throw new NotFoundException('Text file not found');
     }
@@ -79,7 +79,7 @@ export class AudioService {
     if (!book) {
       throw new NotFoundException('Book not found');
     }
-    const textFilePath = path.join(`${book.detail}`);
+    const textFilePath = path.join(`${book.content}`);
     if (!fs.existsSync(textFilePath)) {
       throw new NotFoundException('Text file not found');
     }
